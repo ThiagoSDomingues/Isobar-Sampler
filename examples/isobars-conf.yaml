@@ -57,7 +57,9 @@ isobar_properties:
        description: Depth of correlation function for r < correlation_length.  Should be >= -1.
        value: -1
 
-
+     beta_4:
+       description: Hexadecapolar deformation beta_4 of isobar. 
+       value: 0 
 
    isobar2:
      isobar_name: WS2
@@ -89,3 +91,7 @@ isobar_properties:
      correlation_strength:
        description: Depth of correlation function for r < correlation_length.  Should be >= -1.
        value: -1
+
+     beta_4:
+       description: Hexadecapolar deformation beta_4 of isobar. 
+       value: 0.1  
