@@ -80,6 +80,10 @@ def Y_30(costheta,phi):
     return np.sqrt(7./(4.*np.pi))*(5.*costheta**3 -3.*costheta)/2.
 
 # @jit(nopython=True)
+def Y_40(costheta,phi):
+    return 3./16.*np.sqrt(1./np.pi)*(35.*costheta**4 - 30.*costheta^2 + 3)
+
+# @jit(nopython=True)
 # Derivative with respect to theta, phi
 def dY20_dtheta(costheta,sintheta,phi):
     return (-3./2.)*math.sqrt(5./np.pi)*costheta*sintheta
@@ -91,6 +95,10 @@ def dY22_dtheta(costheta,sintheta,phi):
 # @jit(nopython=True)
 def dY30_dtheta(costheta,sintheta,phi):
     return 1./4.*math.sqrt(7./np.pi)*(3*sintheta-15*sintheta*costheta**2)
+
+# @jit(nopython=True)
+def dY40_dtheta(costheta,sintheta,phi):
+    return (-15./4.)*math.sqrt(np.pi)*(7.*costheta^3 - 3.*costheta)*sintheta
 
 # @jit(nopython=True)
 def dY22_dphi(costheta,sintheta,phi):
