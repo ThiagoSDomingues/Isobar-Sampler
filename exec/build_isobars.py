@@ -291,9 +291,10 @@ def add_correlations_step(nucleus, c_length, c_strength, avgprob):
 
 
 # Modifies coordinates of a nucleon according to angular deformation parameterized by coefficients beta_{l,m}
+# Updated to include beta4 (hexadecapole deformation)
 # def deform(r,costheta,phi,Rws,Rstep, w,b20,b22,b3,db20,db22,db3):
 # def deform(r,costheta,phi,Rws,Rstep, w,beta20,beta22,beta3, f2, fp2,f3,fp3):
-def deform_nucleon(r,costheta,phi,R,beta20,beta22,beta3, f2, fp2,f3,fp3):
+def deform_nucleon(r,costheta,phi,R,beta20,beta22,beta3,f2,fp2,f3,fp3, f4, fp4):
 #     beta20 = b2*math.cos(gamma)
 #     beta22 = b2*math.sin(gamma)/np.sqrt(2)
     theta = np.arccos(costheta)
@@ -305,15 +306,23 @@ def deform_nucleon(r,costheta,phi,R,beta20,beta22,beta3, f2, fp2,f3,fp3):
     fp2r = fp2(r)
     f3r = f3(r)
     fp3r = fp3(r)
+    f4r = f4(r)
+    fp4r = fp(r)
+
+    # Angular shifts
     dtheta += R/r/r*beta20*f2r*dY20_dtheta(costheta,sintheta,phi)
     dtheta += R/r/r*beta22*f2r*dY22_dtheta(costheta,sintheta,phi)
     dtheta += R/r/r*beta3*f3r*dY30_dtheta(costheta,sintheta,phi)
+    dtheta += R/r/r*beta4*f4r*dY40_dtheta(costheta,sintheta,phi)
 
     dphi += R/r**2/sintheta**2*beta22*f2r*dY22_dphi(costheta,sintheta,phi)
+    # Note: Y_40 has no phi dependence, so no dphi contribution from beta4
 
+    # Radial shifts
     dr += R*beta20*fp2r*Y_20(costheta,phi)
     dr += R*beta22*fp2r*Y_22(costheta,phi)
     dr += R*beta3*fp3r*Y_30(costheta,phi)
+    dr += R*beta4*fp4r*Y_40(costheta,phi)
     
     
 #     if np.abs(dr) >= np.abs(r):
