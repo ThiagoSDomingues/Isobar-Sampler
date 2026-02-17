@@ -490,7 +490,7 @@ def main():
             isobar_conf = confs['isobar_properties']['isobar'+str(n_isobars+1)]
 
             # Default values for all parameters, if they don't appear in the input file
-            beta2, gamma, beta3 = 0, 0, 0 # angular deformation parameters
+            beta2, gamma, beta3, beta4 = 0, 0, 0, 0 # angular deformation parameters (added beta4)
             realistic_correlation = 0 # 1 if using realistic correlation, 0 if using step function
             correlation_volume = 0 # volume of desired correlation \int dr r^2 C(r)
             correlation_extremum = -1 # minimum (if negative) or maximum (if positive) of desired correlation
@@ -512,13 +512,15 @@ def main():
                 diffusiveness = isobar_conf['step_diffusiveness']['value']
             
             # Angular deformation parameters
-            # beta2, gamma, beta3 = 0, 0, 0
+            # beta2, gamma, beta3, beta4 = 0, 0, 0, 0
             if 'beta_2' in isobar_conf:
                 beta2 = isobar_conf['beta_2']['value']
             if 'gamma' in isobar_conf:
                 gamma = isobar_conf['gamma']['value']
             if 'beta_3' in isobar_conf:
                 beta3 = isobar_conf['beta_3']['value']
+            if 'beta_4' in isobar_conf:
+                beta3 = isobar_conf['beta_4']['value']    
 
 
             # Short-range correlation parameters
@@ -581,7 +583,7 @@ def main():
                 raise Exception('correlation_extremum/correlation_strength cannot be smaller than -1')
                     
             # print(f'{correlation_extremum=}, {correlation_volume=}') 
-            isobars += [ [R_ws,a_ws,R_step,diffusiveness,beta2,gamma,beta3, correlation_volume, correlation_extremum, realistic_correlation] ]
+            isobars += [ [R_ws,a_ws,R_step,diffusiveness,beta2,gamma,beta3,beta4, correlation_volume, correlation_extremum, realistic_correlation] ]
             isobar_names += [ isobar_conf['isobar_name'] ]
             n_isobars +=1
         
@@ -598,6 +600,7 @@ def main():
         beta2 = isobars[isobar,4]
         gamma = isobars[isobar,5]
         beta3 = isobars[isobar,6]
+        beta4 = isobars[isobar,10]
         realistic_correlation = isobars[isobar,9]
 #         print(f'{realistic_correlation=}')
         
@@ -610,8 +613,8 @@ def main():
 
         # Prepare angular deformation.  Solve differential equation once and 
         # pass interpolation functions via arguments for evaluation in deform_*()
-        if (beta2 != 0 or beta3 != 0):
-            print(f'Solving differential equation for angular deformation.  {beta2=}, {gamma=}, {beta3=}')
+        if (beta2 != 0 or beta3 != 0 or beta4 != 0):
+            print(f'Solving differential equation for angular deformation.  {beta2=}, {gamma=}, {beta3=}, {beta4=}')
             rmin = R_ws/10
             rmax = 3*R_ws
             
@@ -631,12 +634,20 @@ def main():
 
             f3 = interp1d(res3.t, res3.y[0] - res3.y[1,-1]/res3.y[3,-1]*res3.y[2])
             fp3 = interp1d(res3.t, res3.y[1] - res3.y[1,-1]/res3.y[3,-1]*res3.y[3])
+
+            # multipole l = 4 (hexadecapole)
+            args=(R_ws,a_ws,4) # l = 4 
+            res4 = solve_ivp(fun=lambda t,y: diff_eq(t,y,*args), y0=z_init,t_span=[rmax, rmin],rtol=1e-10,atol=1e-10)
+
+            f4 = interp1d(res4.t, res4.y[0] - res4.y[1,-1]/res4.y[3,-1]*res4.y[2])
+            fp4 = interp1d(res4.t, res4.y[1] - res4.y[1,-1]/res4.y[3,-1]*res4.y[3])
         else:
             f2 = 0
             fp2 = 0
             f3 = 0
             fp3 = 0
-
+            f4 = 0
+            fp4 = 0
 
 #         Prepare correlation
         correlation_volume = isobars[isobar,7]
@@ -686,7 +697,7 @@ def main():
 #         njobs = 60
 #         njobs = -1
 #         print('building nuclei')
-        data = Parallel(n_jobs=njobs)(delayed(build_nucleus)(seeds[s],n_nucleons,*isobars[isobar],avgprob,f2,fp2,f3,fp3, corr_shift_interp) for s in range(n_configs))
+        data = Parallel(n_jobs=njobs)(delayed(build_nucleus)(seeds[s],n_nucleons,*isobars[isobar],avgprob,f2,fp2,f3,fp3,f4,fp4,corr_shift_interp) for s in range(n_configs))
 #         for s in range(n_configs):
 #             data[s,:,:] = build_nucleus(seeds[s],n_nucleons,*isobars[isobar],f2,fp2,f3,fp3)
     
