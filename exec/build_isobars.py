@@ -343,7 +343,8 @@ def deform_nucleon(r,costheta,phi,R,beta20,beta22,beta3,f2,fp2,f3,fp3, f4, fp4):
 
 # Take configuration of a nucleus and deform it by shifting each nucleon with deform() function
 # Uncorrelated nucleons will still be uncorrelated after deformation.
-def deform_nucleus(nucleus, R, beta2, gamma, beta3, f2, fp2,f3,fp3):
+# Updated to include beta4 (hexadecapole deformation)
+def deform_nucleus(nucleus, R, beta2, gamma, beta3, beta4, f2, fp2, f3, fp3, f4, fp4):
 #     rmin = 1.0e-1
     rmin = R/10
     for nucleon, position in enumerate(nucleus):
@@ -358,7 +359,7 @@ def deform_nucleus(nucleus, R, beta2, gamma, beta3, f2, fp2,f3,fp3):
 
             nsteps = 10
             for step in range(nsteps):
-                r,costheta,phi = deform_nucleon(r,costheta,phi,R,beta20/nsteps,beta22/nsteps,beta3/nsteps, f2, fp2,f3,fp3)
+                r,costheta,phi = deform_nucleon(r,costheta,phi,R,beta20/nsteps,beta22/nsteps,beta3/nsteps,beta4/nsteps,f2,fp2,f3,fp3,f4,fp4)
 
             x, y, z = cartesian(r,costheta,phi)
             nucleus[nucleon] = np.array([x,y,z])
