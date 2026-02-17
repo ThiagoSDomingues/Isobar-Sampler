@@ -404,7 +404,8 @@ def place_nucleon(R_step, w_gauss, seed):
 # Build nucleus by randomly placing nucleons independently according to a 
 # spherically-symmetric distribution, then adding angular deformation,
 # then adding short-range pair correlation.  Result is list of positions in cartesian coordinates.
-def build_nucleus(seeds_nucleus, n_nucleons, R_ws, a_ws, R_step, w_gauss, beta2, gamma, beta3, c_volume, c_extremum, realistic_correlation, avgprob, f2, fp2, f3, fp3, corr_shift_interp):
+# Updated to include beta4 (hexadecapole deformation) 
+def build_nucleus(seeds_nucleus, n_nucleons, R_ws, a_ws, R_step, w_gauss, beta2, gamma, beta3, beta4, c_volume, c_extremum, realistic_correlation, avgprob, f2, fp2, f3, fp3, f4, fp4, corr_shift_interp):
 
     # Place nucleons via 3D step + Gaussian
     nucleus = np.empty((n_nucleons,3))
@@ -413,8 +414,8 @@ def build_nucleus(seeds_nucleus, n_nucleons, R_ws, a_ws, R_step, w_gauss, beta2,
         nucleus[n,:] = place_nucleon(R_step, w_gauss, seeds_nucleus[n])
         
     # Perform angular deformation by shifting nucleon positions
-    if (beta2 != 0 or beta3 != 0):
-        nucleus = deform_nucleus(nucleus, R_ws, beta2, gamma, beta3, f2, fp2,f3,fp3)
+    if (beta2 != 0 or beta3 != 0 or beta4 != 0):
+        nucleus = deform_nucleus(nucleus, R_ws, beta2, gamma, beta3, beta4, f2, fp2,f3,fp3, f4, fp4)
         
 
     # Add short-range correlations by shifting nucleon positions
