@@ -3,7 +3,7 @@
 """
 Created on Wed Aug 31 16:33:43 2022
 
-@author: mauricio+matt
+@author: mauricio+matt+optimusThi
 
 Usage: ./build_isobars.py conf.yaml
 
@@ -79,9 +79,9 @@ def Y_20(costheta,phi):
 def Y_30(costheta,phi):
     return np.sqrt(7./(4.*np.pi))*(5.*costheta**3 -3.*costheta)/2.
 
-# @jit(nopython=True)
+# @jit(nopython=True) ; adding hexadecapole deformation
 def Y_40(costheta,phi):
-    return 3./16.*np.sqrt(1./np.pi)*(35.*costheta**4 - 30.*costheta^2 + 3)
+    return 3./16.*np.sqrt(1./np.pi)*(35.*costheta**4 - 30.*costheta**2 + 3)
 
 # @jit(nopython=True)
 # Derivative with respect to theta, phi
@@ -98,7 +98,7 @@ def dY30_dtheta(costheta,sintheta,phi):
 
 # @jit(nopython=True)
 def dY40_dtheta(costheta,sintheta,phi):
-    return (-15./4.)*math.sqrt(np.pi)*(7.*costheta^3 - 3.*costheta)*sintheta
+    return (-15./4.)*math.sqrt(1./np.pi)*(7.*costheta**3 - 3.*costheta)*sintheta
 
 # @jit(nopython=True)
 def dY22_dphi(costheta,sintheta,phi):
