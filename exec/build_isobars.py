@@ -81,7 +81,7 @@ def Y_30(costheta,phi):
 
 # @jit(nopython=True) ; adding hexadecapole deformation
 def Y_40(costheta,phi):
-    return 3./16.*np.sqrt(1./np.pi)*(35.*costheta**4 - 30.*costheta**2 + 3)
+    return (3./16.)*(1./math.sqrt(np.pi))*(35.*costheta**4 - 30.*costheta**2 + 3)
 
 # @jit(nopython=True)
 # Derivative with respect to theta, phi
