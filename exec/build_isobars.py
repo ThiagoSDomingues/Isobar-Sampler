@@ -294,7 +294,7 @@ def add_correlations_step(nucleus, c_length, c_strength, avgprob):
 # Updated to include beta4 (hexadecapole deformation)
 # def deform(r,costheta,phi,Rws,Rstep, w,b20,b22,b3,db20,db22,db3):
 # def deform(r,costheta,phi,Rws,Rstep, w,beta20,beta22,beta3, f2, fp2,f3,fp3):
-def deform_nucleon(r,costheta,phi,R,beta20,beta22,beta3,f2,fp2,f3,fp3, f4, fp4):
+def deform_nucleon(r,costheta,phi,R,beta20,beta22,beta3,beta4,f2,fp2,f3,fp3, f4, fp4):
 #     beta20 = b2*math.cos(gamma)
 #     beta22 = b2*math.sin(gamma)/np.sqrt(2)
     theta = np.arccos(costheta)
@@ -307,7 +307,7 @@ def deform_nucleon(r,costheta,phi,R,beta20,beta22,beta3,f2,fp2,f3,fp3, f4, fp4):
     f3r = f3(r)
     fp3r = fp3(r)
     f4r = f4(r)
-    fp4r = fp(r)
+    fp4r = fp4(r)
 
     # Angular shifts
     dtheta += R/r/r*beta20*f2r*dY20_dtheta(costheta,sintheta,phi)
@@ -520,7 +520,7 @@ def main():
             if 'beta_3' in isobar_conf:
                 beta3 = isobar_conf['beta_3']['value']
             if 'beta_4' in isobar_conf:
-                beta3 = isobar_conf['beta_4']['value']    
+                beta4 = isobar_conf['beta_4']['value']    
 
 
             # Short-range correlation parameters
