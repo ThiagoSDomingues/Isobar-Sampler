@@ -583,7 +583,7 @@ def main():
                 raise Exception('correlation_extremum/correlation_strength cannot be smaller than -1')
                     
             # print(f'{correlation_extremum=}, {correlation_volume=}') 
-            isobars += [ [R_ws,a_ws,R_step,diffusiveness,beta2,gamma,beta3,beta4, correlation_volume, correlation_extremum, realistic_correlation] ]
+            isobars += [ [R_ws,a_ws,R_step,diffusiveness,beta2,gamma,beta3, correlation_volume, correlation_extremum, realistic_correlation, beta4] ]
             isobar_names += [ isobar_conf['isobar_name'] ]
             n_isobars +=1
         
